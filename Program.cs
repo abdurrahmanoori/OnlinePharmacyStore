@@ -1,27 +1,55 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using OnlinePharmacyStore.DataAccess.Data;
 using OnlinePharmacyStore.Models;
+using OnlinePharmacyStore.Utility;
 using System.Configuration;
+//check “.Net Framework project and item templates”
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 
-
-var connectionString = builder.Configuration.GetConnectionString("DBCS");
 builder.Services.AddDbContext<AppDbContext>(option =>
-option.UseSqlServer(connectionString));
+option.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
+
+
+//builder.Services.AddRazorPages().AddRazorRuntimeCompilation();//Run Razor page code quickly.
+//First install RazorPage.Runtimecompilation.
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+// By Adding AddIdentity method, we added support for giving role for users.
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddDefaultTokenProviders()
+.AddEntityFrameworkStores<AppDbContext>();
+
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";  //in your case /Account/Login
+    options.LogoutPath = "/Identity/Account/logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";// In case of access denied.
+});
+
+//builder.Services.AddMvc(config =>
+//{
+//    var policy = new AuthorizationPolicyBuilder()
+//                     .RequireAuthenticatedUser()
+//                     .Build();
+//    config.Filters.Add(new AuthorizeFilter(policy));
+//});
+
+
 
 var app = builder.Build();
-
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>();
-
 
 
 // Configure the HTTP request pipeline.
@@ -36,13 +64,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+//app.UseAuthentication();
 app.UseAuthorization();
-
+//app.UseSession();
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
-               pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
-               );
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+
 app.Run();
 
 
@@ -60,44 +89,15 @@ app.Run();
 
 
 
-
-
-
-//services.AddRazorPages().AddRazorRuntimeCompilation();//Run Razor page code quickly.
-//                                                      //First install RazorPage.Runtimecompilation.
-
-
-//services.AddDbContext<AppDbContext>(option =>
-//option.UseSqlServer(Configuration.GetConnectionString("DBCS")));
-
-
-
-////services.AddIdentity<ApplicationUser, IdentityRole>().AddDefaultTokenProviders()
-////.AddEntityFrameworkStores<AppDbContext>();
-
-
 //services.AddIdentity<ApplicationUser, IdentityRole>()
 //.AddEntityFrameworkStores<AppDbContext>();
 
 //services.AddControllersWithViews();
 
-//services.AddMvc(config =>
-//{
-//    var policy = new AuthorizationPolicyBuilder()
-//                     .RequireAuthenticatedUser()
-//                     .Build();
-//    config.Filters.Add(new AuthorizeFilter(policy));
-//});
 
 
-//services.ConfigureApplicationCookie(options =>
-//{
-//    options.LoginPath = "/Identity/Account/Login";  //in your case /Account/Login
-//    options.LogoutPath = "/Identity/Account/logout";
-//    options.AccessDeniedPath = "/Visitor/Error/AccessDenied";// In case of access denied.
-//});
 
-//services.AddAuthentication().AddCookie();
+
 
 //services.Configure<IdentityOptions>(option =>//Override indentity default password ruls.
 //{
@@ -128,23 +128,6 @@ app.Run();
 //        app.UseExceptionHandler("/Visitor/Error/Error");
 //        app.UseHsts();
 //    }
-//    app.UseHttpsRedirection();
-//    app.UseStaticFiles();
-
-//    app.UseRouting();
-
-
-
-//    app.UseAuthentication();
-//    app.UseAuthorization();
-
-//    //app.UseMvc(routes =>
-//    //{
-//    //    routes.MapRoute(
-//    //      name: "areas",
-//    //      template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-//    //    );
-//    //});
 
 //    app.UseEndpoints(endpoints =>
 //    {
@@ -157,7 +140,4 @@ app.Run();
 //        endpoints.MapControllerRoute(
 //            name: "default",
 //            pattern: "{Area=Visitor}/{controller=Home}/{action=Index}/{id?}");
-
-
 //    });
-//    ;
