@@ -3,41 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using OnlinePharmacyStore.DataAccess.Data;
+using OnlinePharmacyStore.DataAccess.Repository.IRepository;
 using OnlinePharmacyStore.Models;
+using OnlinePharmacyStore.Models.CommonPropertyDirectory;
 
 namespace OnlinePharmacyStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class InjectionsController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public InjectionsController(AppDbContext context)
+        public InjectionsController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Admin/Injections
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.Injections != null ? 
-                          View(await _context.Injections.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Injections'  is null.");
+            return _unitOfWork.Injection != null ?
+                        View(_unitOfWork.Injection.GetAll()) :
+                        Problem("Entity set 'AppDbContext.Injections'  is null.");
         }
 
         // GET: Admin/Injections/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Injections == null)
+            if (id == null || _unitOfWork.Injection == null)
             {
                 return NotFound();
             }
 
-            var injection = await _context.Injections
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var injection = _unitOfWork.Injection
+                .GetFirstOrDefault(m => m.Id == id);
             if (injection == null)
             {
                 return NotFound();
@@ -52,31 +54,38 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Admin/Injections/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: Admin/Injections/Create
+        //To protect from overposting attacks, enable the specific properties you want to bind to.
+        //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection)
+        public IActionResult Create([Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection, IFormFile file)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(injection);
-                await _context.SaveChangesAsync();
+                if (file.FileName != null)
+                {
+                    _unitOfWork.Injection.SaveImage(injection, file, webHostEnvironment.WebRootPath);
+                }
+                _unitOfWork.Injection.Add(injection);
+                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(injection);
         }
 
         // GET: Admin/Injections/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null || _context.Injections == null)
+            if (id == null || _unitOfWork.Injection == null)
             {
                 return NotFound();
             }
 
-            var injection = await _context.Injections.FindAsync(id);
+            var injection = _unitOfWork.Injection.GetFirstOrDefault(u => u.Id == id);
             if (injection == null)
             {
                 return NotFound();
@@ -84,81 +93,69 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
             return View(injection);
         }
 
-        // POST: Admin/Injections/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Admin/Injections/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection)
+        //public IActionResult Edit(int id, [Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection, IFormFile file)
+        public IActionResult Edit(Injection injection, IFormFile file)
         {
-            if (id != injection.Id)
-            {
-                return NotFound();
-            }
+            //if (id != injection.Id)
+            //{
+            //    return NotFound();
+            //}
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(injection);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InjectionExists(injection.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                _unitOfWork.Injection.Update(injection, file, webHostEnvironment.WebRootPath);
+                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(injection);
         }
 
-        // GET: Admin/Injections/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Injections == null)
-            {
-                return NotFound();
-            }
+        //// GET: Admin/Injections/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null || _context.Injections == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var injection = await _context.Injections
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (injection == null)
-            {
-                return NotFound();
-            }
+        //    var injection = await _context.Injections
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (injection == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(injection);
-        }
+        //    return View(injection);
+        //}
 
-        // POST: Admin/Injections/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Injections == null)
-            {
-                return Problem("Entity set 'AppDbContext.Injections'  is null.");
-            }
-            var injection = await _context.Injections.FindAsync(id);
-            if (injection != null)
-            {
-                _context.Injections.Remove(injection);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Admin/Injections/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (_context.Injections == null)
+        //    {
+        //        return Problem("Entity set 'AppDbContext.Injections'  is null.");
+        //    }
+        //    var injection = await _context.Injections.FindAsync(id);
+        //    if (injection != null)
+        //    {
+        //        _context.Injections.Remove(injection);
+        //    }
 
-        private bool InjectionExists(int id)
-        {
-          return (_context.Injections?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //private bool InjectionExists(int id)
+        //{
+        //  return (_context.Injections?.Any(e => e.Id == id)).GetValueOrDefault();
+        //}
     }
 }

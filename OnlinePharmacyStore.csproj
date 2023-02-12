@@ -19,13 +19,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OnlinePharmacyStore.DataAccess\OnlinePharmacyStore.DataAccess.csproj" />
     <ProjectReference Include="..\OnlinePharmacyStore.Models\OnlinePharmacyStore.Models.csproj" />
     <ProjectReference Include="..\OnlinePharmacyStore.Utility\OnlinePharmacyStore.Utility.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\injection\" />
   </ItemGroup>
 
 </Project>

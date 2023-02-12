@@ -4,13 +4,16 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using OnlinePharmacyStore.DataAccess.Data;
+using OnlinePharmacyStore.DataAccess.Repository;
+using OnlinePharmacyStore.DataAccess.Repository.IRepository;
 using OnlinePharmacyStore.Models;
+using OnlinePharmacyStore.Models.CommonPropertyDirectory;
 using OnlinePharmacyStore.Utility;
 using System.Configuration;
+using System.Threading.RateLimiting;
 //check “.Net Framework project and item templates”
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 
 // Add services to the container.
@@ -24,6 +27,8 @@ option.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 
 //builder.Services.AddRazorPages().AddRazorRuntimeCompilation();//Run Razor page code quickly.
 //First install RazorPage.Runtimecompilation.
+
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 // By Adding AddIdentity method, we added support for giving role for users.
