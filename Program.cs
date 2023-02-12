@@ -36,6 +36,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders()
 .AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddControllersWithViews(opt => opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

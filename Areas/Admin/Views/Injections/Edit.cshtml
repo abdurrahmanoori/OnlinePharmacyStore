@@ -10,77 +10,82 @@
 <hr />
 
 <div class="row">
-    <div class="col-md-7 pt-4">
-        <form class="row" asp-action="Edit" method="post" enctype="multipart/form-data">
-            <h2>Edit Injection.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating py-2 col-12">
-                <input asp-for="GenericName" class="form-control" aria-required="true" />
-                <label asp-for="GenericName"></label>
-                <span asp-validation-for="GenericName" class="text-danger"></span>
+    <div class="col-8">
+        <div class="col-md-7 pt-4">
+            <form class="row" asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input asp-for="ImageUrl" hidden />
+                <h2>Edit Injection.</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="GenericName" class="form-control" aria-required="true" />
+                    <label asp-for="GenericName"></label>
+                    <span asp-validation-for="GenericName" class="text-danger"></span>
 
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="BrandName" class="form-control" aria-required="true" />
-                <label asp-for="BrandName"></label>
-                <span asp-validation-for="BrandName" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="Price" class="form-control" aria-required="true" />
-                <label asp-for="Price"></label>
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="ImageUrl"></label>
-                @*<input type="file" name="file" class="form-control" />*@
-                <img src="@Model.ImageUrl" />
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="BrandName" class="form-control" aria-required="true" />
+                    <label asp-for="BrandName"></label>
+                    <span asp-validation-for="BrandName" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="Price" class="form-control" aria-required="true" />
+                    <label asp-for="Price"></label>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="ImageUrl"></label>
+                    <input type="file" name="file" class="form-control" />
+                   
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="Country" class="form-control" aria-required="true" />
+                    <label asp-for="Country"></label>
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="MRPRs" class="form-control" aria-required="true" />
+                    <label asp-for="MRPRs"></label>
+                    <span asp-validation-for="MRPRs" class="text-danger"></span>
+                </div>
 
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="Country" class="form-control" aria-required="true" />
-                <label asp-for="Country"></label>
-                <span asp-validation-for="Country" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="MRPRs" class="form-control" aria-required="true" />
-                <label asp-for="MRPRs"></label>
-                <span asp-validation-for="MRPRs" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating py-2 col-6">
-                <input asp-for="BatchNo" class="form-control" aria-required="true" />
-                <label asp-for="BatchNo"></label>
-                <span asp-validation-for="BatchNo" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="MfgDate" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="MfgDate"></label>
-                <span asp-validation-for="MfgDate" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="ExpDate" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="ExpDate"></label>
-                <span asp-validation-for="ExpDate" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="centigrade" class="form-control" aria-required="true" />
-                <label asp-for="centigrade"></label>
-                <span asp-validation-for="centigrade" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input asp-for="Milliliter" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Milliliter"></label>
-                <span asp-validation-for="Milliliter" class="text-danger"></span>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <input type="submit" class="btn btn-primary btn-lg" value="Update" />
-            </div>
-
-        </form>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="BatchNo" class="form-control" aria-required="true" />
+                    <label asp-for="BatchNo"></label>
+                    <span asp-validation-for="BatchNo" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="MfgDate" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="MfgDate"></label>
+                    <span asp-validation-for="MfgDate" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="ExpDate" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="ExpDate"></label>
+                    <span asp-validation-for="ExpDate" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="centigrade" class="form-control" aria-required="true" />
+                    <label asp-for="centigrade"></label>
+                    <span asp-validation-for="centigrade" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input asp-for="Milliliter" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="Milliliter"></label>
+                    <span asp-validation-for="Milliliter" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <input type="submit" class="btn btn-primary btn-lg" value="Update" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-4">
+        <img src="@Model.ImageUrl" style="width:auto; height:350px;" />
     </div>
 </div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
