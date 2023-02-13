@@ -62,12 +62,13 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (file.FileName != null)
+                if (file != null)
                 {
                     _unitOfWork.Injection.SaveImage(injection, file, webHostEnvironment.WebRootPath);
                 }
                 _unitOfWork.Injection.Add(injection);
                 _unitOfWork.Save();
+                TempData["success"] = "Created Successfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(injection);
@@ -97,7 +98,6 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection, IFormFile file)
-        //public IActionResult Edit(Injection injection, IFormFile file)
         {
             if (id != injection.Id)
             {
@@ -109,6 +109,7 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
 
                 _unitOfWork.Injection.Update(injection, file, webHostEnvironment.WebRootPath);
                 _unitOfWork.Save();
+                TempData["success"] = "Updated Succeffuly!";
                 return RedirectToAction(nameof(Index));
             }
             return View(injection);
