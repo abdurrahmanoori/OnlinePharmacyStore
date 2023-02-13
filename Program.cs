@@ -36,6 +36,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders()
 .AddEntityFrameworkStores<AppDbContext>();
 
+// Whene want to edit an entity which has image, the 'file' field will be always Invalid.
+// In order to make that valid add the fowllowing parameter to AddControllersWtihViews()
+// function.
 builder.Services.AddControllersWithViews(opt => opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
 
@@ -99,7 +102,6 @@ app.Run();
 //services.AddIdentity<ApplicationUser, IdentityRole>()
 //.AddEntityFrameworkStores<AppDbContext>();
 
-//services.AddControllersWithViews();
 
 
 

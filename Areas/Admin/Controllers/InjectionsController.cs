@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlinePharmacyStore.DataAccess.Repository.IRepository;
 using OnlinePharmacyStore.Models;
@@ -85,6 +81,8 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
                 return NotFound();
             }
 
+
+
             var injection = _unitOfWork.Injection.GetFirstOrDefault(u => u.Id == id);
             if (injection == null)
             {
@@ -98,13 +96,13 @@ namespace OnlinePharmacyStore.Areas.Admin.Controllers
         //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public IActionResult Edit(int id, [Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection, IFormFile file)
-        public IActionResult Edit(Injection injection, IFormFile file)
+        public IActionResult Edit(int id, [Bind("Id,GenericName,BrandName,Country,Price,MRPRs,MfgDate,ExpDate,ImageUrl,BatchNo,centigrade,Milliliter")] Injection injection, IFormFile file)
+        //public IActionResult Edit(Injection injection, IFormFile file)
         {
-            //if (id != injection.Id)
-            //{
-            //    return NotFound();
-            //}
+            if (id != injection.Id)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
